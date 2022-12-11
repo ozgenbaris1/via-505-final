@@ -4,7 +4,7 @@ USE gotur;
 
 CREATE TABLE country (
 	country_id           int  NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	name                 varchar(100)
+	name                 varchar(100)  NOT NULL
  );
 
 CREATE TABLE city (
