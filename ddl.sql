@@ -24,7 +24,7 @@ CREATE TABLE district (
 ALTER TABLE district ADD CONSTRAINT fk_district_city FOREIGN KEY ( city_id ) REFERENCES city( city_id );
 
 CREATE TABLE address (
-	address_id           int  NOT NULL    PRIMARY KEY,
+	address_id           int  NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
 	latitude             float  NOT NULL    ,
 	longitude            float  NOT NULL    ,
 	detail               varchar(256)  NOT NULL    ,
