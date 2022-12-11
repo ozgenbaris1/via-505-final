@@ -131,7 +131,7 @@ CREATE TABLE customer_order (
 	status_id            int  NOT NULL    ,
 	courier_id           int  NOT NULL    ,
 	store_id             int  NOT NULL
- ) engine=InnoDB;
+ );
 
 ALTER TABLE customer_order ADD CONSTRAINT fk_customer_order_customer FOREIGN KEY ( customer_id ) REFERENCES customer( customer_id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
