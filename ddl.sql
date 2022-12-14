@@ -208,11 +208,11 @@ create function fn_get_closest_store(customer_id int) returns int deterministic
 ;
 
 create procedure sp_get_inventory_of_store(store_id int)
-        select s.name, i.quantity, p.name
-        from store s
-        left join inventory i using(store_id)
-        inner join product p using(product_id)
-        where s.store_id = store_id
+	select s.name, i.quantity, p.name
+	from store s
+	left join inventory i using(store_id)
+	inner join product p using(product_id)
+	where s.store_id = store_id
 ;
 
 create procedure sp_make_order(j json, customer_id)
