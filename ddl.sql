@@ -279,3 +279,15 @@ create procedure sp_confirm_delivery(customer_order_id int)
 	where co.customer_order_id = customer_order_id
 ;
 
+
+create procedure sp_give_rating(point int, customer_order_id int)
+    insert into 
+		rating(point, customer_id, customer_order_id, courier_id)
+        select
+            point,
+            co.customer_order_id,
+            co.customer_id,
+            co.courier_id
+        from customer_order co
+        where co.customer_order_id = customer_order_id
+;
