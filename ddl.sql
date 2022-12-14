@@ -273,4 +273,9 @@ create procedure sp_make_order(j json, customer_id int)
 	call sp_make_order('[{"product_id": 1, "quantity": 3}, {"product_id":2, "quantity":1}]', 1)
 */
 
+create procedure sp_confirm_delivery(customer_order_id int)
+	update customer_order co
+	set co.status_id = 4
+	where co.customer_order_id = customer_order_id
+;
 
