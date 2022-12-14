@@ -137,3 +137,26 @@ CREATE TABLE IF NOT EXISTS rating (
 	CONSTRAINT fk_rating_customer_order FOREIGN KEY ( customer_order_id ) REFERENCES customer_order( customer_order_id ),
 	CONSTRAINT fk_rating_courier FOREIGN KEY ( courier_id ) REFERENCES courier( courier_id )
  );
+
+create function fn_get_closest_courier_to_customer(customer_id int) returns int deterministic
+	/* En yakındaki mobil kuryeyi görüntüleme */
+    begin
+        declare courier int;
+        with couriers_by_distance as (
+            select
+                co.courier_id,
+                sqrt(power(a.latitude - co.latitude, 2) + power(a.longitude - co.longitude, 2)) as distance
+            from customer cu
+            inner join address a using(address_id)
+            join courier co
+            where cu.customer_id = customer_id
+            order by distance asc
+        )
+
+        select courier_id into courier
+        from couriers_by_distance
+        where distance = (select min(distance) from couriers_by_distance) ;
+
+        return courier;
+        end
+;
