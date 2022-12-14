@@ -8,4 +8,5 @@ address_id,latitude,longitude,detail,country_id,city_id,district_id
 7,40.9205,29.1402,Cengiz Sokak,220,34,447
 8,40.9274,29.1303,Kunuri Sokak,220,34,447
 9,40.9986,29.0649,Ayazma Caddesi,220,34,435
-10,40.9891,29.0331,Pazar Yolu Sokak,220,34,429
+10,40.9891,29.0331,Pazar Yolu Sokak,220,34,429,
+11,40.9885,29.0507,Site Önü Sk. Rohat ev Daire:5,220,34,429
