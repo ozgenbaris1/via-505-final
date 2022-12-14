@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS rating (
 	CONSTRAINT fk_rating_courier FOREIGN KEY ( courier_id ) REFERENCES courier( courier_id )
  );
 
-create function fn_get_closest_courier_to_customer(customer_id int) returns int deterministic
+create function fn_get_closest_courier(customer_id int) returns int deterministic
 	/* En yakındaki mobil kuryeyi görüntüleme */
     begin
         declare courier int;
