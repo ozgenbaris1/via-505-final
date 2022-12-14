@@ -17,7 +17,7 @@ tables = [
     "courier",
     "customer_order",
     "customer_order_detail",
-    # "rating",
+    "rating",
 ]
 
 

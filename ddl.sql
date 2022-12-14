@@ -197,3 +197,14 @@ create procedure sp_get_inventory_of_closest_store(customer_id int)
         left join inventory i using(store_id)
         inner join product p using(product_id)
 ;
+
+create procedure sp_give_rating(point int, customer_order_id int)
+    insert into rating(point, customer_id, customer_order_id, courier_id)
+        select
+            point,
+            co.customer_order_id,
+            co.customer_id,
+            co.courier_id
+        from customer_order co
+        where co.customer_order_id = customer_order_id
+;
