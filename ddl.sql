@@ -139,29 +139,9 @@ CREATE TABLE IF NOT EXISTS rating (
  );
 
 create function fn_get_closest_courier(customer_id int) returns int deterministic
-	/* En yakındaki mobil kuryeyi görüntüleme */
     begin
         declare courier int;
-        with couriers_by_distance as (
-            select
-                co.courier_id,
-                sqrt(power(a.latitude - co.latitude, 2) + power(a.longitude - co.longitude, 2)) as distance
-            from customer cu
-            inner join address a using(address_id)
-            join courier co
-            where cu.customer_id = customer_id
-            order by distance asc
-        )
-
-        select courier_id into courier
-        from couriers_by_distance
-        where distance = (select min(distance) from couriers_by_distance) ;
-
-        return courier;
-        end
-;
-
-create procedure sp_get_inventory_of_closest_store(customer_id int)
+        
         with customer_location as (
             select
                 a.latitude,
@@ -170,41 +150,69 @@ create procedure sp_get_inventory_of_closest_store(customer_id int)
             inner join address a using(address_id)
             where c.customer_id = customer_id
         ),
+            
+        closest_courier as (
+            select
+                c.courier_id,
+                sqrt(power(cl.latitude - c.latitude, 2) + power(cl.longitude - c.longitude, 2)) as distance
+            from customer_location cl
+            join courier c
+            order by distance asc
+            limit 1
+        )
 
+        select courier_id into courier
+        from closest_courier cc;
+
+        return courier;
+        end
+;
+
+create function fn_get_closest_store(customer_id int) returns int deterministic
+    begin
+        declare store int;
+        
+        with customer_location as (
+            select
+                a.latitude,
+                a.longitude
+            from customer c
+            inner join address a using(address_id)
+            where c.customer_id = customer_id
+        ),
+            
         store_locations as (
             select
                 s.store_id,
-                s.name,
                 a.latitude,
                 a.longitude
             from store s
             inner join address a using(address_id)
         ),
-
+                        
         closest_store as (
             select
                 sl.store_id,
-                sl.name,
                 sqrt(power(cl.latitude - sl.latitude, 2) + power(cl.longitude - sl.longitude, 2)) as distance
             from customer_location cl
             join store_locations sl
             order  by distance asc
             limit 1
         )
+        
+        select store_id into store
+        from closest_store cs;
 
-        select cs.name, i.quantity, p.name
-        from closest_store cs
+        return store;
+        end
+;
+
+create procedure sp_get_inventory_of_store(store_id int)
+        select s.name, i.quantity, p.name
+        from store s
         left join inventory i using(store_id)
         inner join product p using(product_id)
+        where s.store_id = store_id
 ;
 
-create procedure sp_give_rating(point int, customer_order_id int)
-    insert into rating(point, customer_id, customer_order_id, courier_id)
-        select
-            point,
-            co.customer_order_id,
-            co.customer_id,
-            co.courier_id
-        from customer_order co
-        where co.customer_order_id = customer_order_id
-;
+create procedure sp_make_order(j json, customer_id)
