@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS category (
 CREATE TABLE IF NOT EXISTS product (
 	product_id           int  NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
 	name                 varchar(100)  NOT NULL    ,
-	price                float  NOT NULL    ,
+	price                float(10,2)  NOT NULL    ,
 	category_id          int  NOT NULL,
 	CONSTRAINT fk_product_category FOREIGN KEY ( category_id ) REFERENCES category( category_id )
  );
