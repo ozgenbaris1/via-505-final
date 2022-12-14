@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS gotur;
-
-USE gotur;
-
 CREATE TABLE IF NOT EXISTS country (
 	country_id           int  NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
 	name                 varchar(100)  NOT NULL
