@@ -160,3 +160,40 @@ create function fn_get_closest_courier_to_customer(customer_id int) returns int 
         return courier;
         end
 ;
+
+create procedure sp_get_inventory_of_closest_store(customer_id int)
+        with customer_location as (
+            select
+                a.latitude,
+                a.longitude
+            from customer c
+            inner join address a using(address_id)
+            where c.customer_id = customer_id
+        ),
+
+        store_locations as (
+            select
+                s.store_id,
+                s.name,
+                a.latitude,
+                a.longitude
+            from store s
+            inner join address a using(address_id)
+        ),
+
+        closest_store as (
+            select
+                sl.store_id,
+                sl.name,
+                sqrt(power(cl.latitude - sl.latitude, 2) + power(cl.longitude - sl.longitude, 2)) as distance
+            from customer_location cl
+            join store_locations sl
+            order  by distance asc
+            limit 1
+        )
+
+        select cs.name, i.quantity, p.name
+        from closest_store cs
+        left join inventory i using(store_id)
+        inner join product p using(product_id)
+;
