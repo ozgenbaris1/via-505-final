@@ -43,19 +43,11 @@ CREATE TABLE customer (
 	customer_id          int  NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
 	first_name           varchar(100)  NOT NULL    ,
 	last_name            varchar(100)  NOT NULL    ,
-	create_date          datetime  NOT NULL DEFAULT CURRENT_TIMESTAMP
- );
-
-CREATE TABLE customer_address (
-	customer_id          int  NOT NULL    ,
 	create_date          datetime  NOT NULL DEFAULT CURRENT_TIMESTAMP   ,
-	address_id           int  NOT NULL    ,
-	CONSTRAINT idx_customer_address PRIMARY KEY ( customer_id, address_id )
+	address_id           int  NOT NULL    
  );
 
-ALTER TABLE customer_address ADD CONSTRAINT fk_address FOREIGN KEY ( address_id ) REFERENCES address( address_id );
-
-ALTER TABLE customer_address ADD CONSTRAINT fk_customer FOREIGN KEY ( customer_id ) REFERENCES customer( customer_id );
+ALTER TABLE customer ADD CONSTRAINT fk_customer_address FOREIGN KEY ( address_id ) REFERENCES address( address_id );
 
 CREATE TABLE category (
 	category_id          int  NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
