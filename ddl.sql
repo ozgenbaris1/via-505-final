@@ -34,9 +34,13 @@ CREATE TABLE IF NOT EXISTS customer (
 	customer_id          int  NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
 	first_name           varchar(100)  NOT NULL    ,
 	last_name            varchar(100)  NOT NULL    ,
+	email                varchar(100)  NOT NULL    ,
+	password             varchar(256)  NOT NULL    ,
+	phone                varchar(13)  NOT NULL    ,
 	create_date          datetime  NOT NULL DEFAULT CURRENT_TIMESTAMP   ,
 	address_id           int  NOT NULL    ,
-	CONSTRAINT fk_customer_address FOREIGN KEY ( address_id ) REFERENCES address( address_id )
+	CONSTRAINT fk_customer_address FOREIGN KEY ( address_id ) REFERENCES address( address_id ),
+	CONSTRAINT idx_customer UNIQUE ( email ) 
  );
 
 CREATE TABLE IF NOT EXISTS category (
