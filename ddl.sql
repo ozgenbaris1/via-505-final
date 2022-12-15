@@ -67,7 +67,6 @@ CREATE TABLE IF NOT EXISTS store (
 	create_date          datetime  NOT NULL DEFAULT current_timestamp   ,
 	address_id           int  NOT NULL,
 	CONSTRAINT fk_store_address FOREIGN KEY ( address_id ) REFERENCES address( address_id )
-
  );
 
 
@@ -78,7 +77,6 @@ CREATE TABLE IF NOT EXISTS inventory (
 	CONSTRAINT idx_stock PRIMARY KEY ( store_id, product_id ),
 	CONSTRAINT fk_inventory_store FOREIGN KEY ( store_id ) REFERENCES store( store_id ),
 	CONSTRAINT fk_inventory_product FOREIGN KEY ( product_id ) REFERENCES product( product_id )
-
  );
 
 CREATE TABLE IF NOT EXISTS stock_entry (
@@ -127,7 +125,6 @@ CREATE TABLE IF NOT EXISTS customer_order_detail (
 	CONSTRAINT idx_customer_order_detail PRIMARY KEY ( customer_order_id, product_id ),
 	CONSTRAINT fk_order FOREIGN KEY ( customer_order_id ) REFERENCES customer_order( customer_order_id ),
 	CONSTRAINT fk_product FOREIGN KEY ( product_id ) REFERENCES product( product_id )
-
  );
 
 CREATE TABLE IF NOT EXISTS rating (
