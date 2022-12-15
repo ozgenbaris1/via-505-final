@@ -1,6 +1,6 @@
 import mysql.connector
 
-data_dir = "/home/barisozgen/development/personal/via/via-505/via-505-final/data"
+data_dir = "./data"
 tables = [
     "country",
     "city",

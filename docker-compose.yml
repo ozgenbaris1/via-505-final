@@ -1,4 +1,3 @@
-# docker run --rm --name via-gotur -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=gotur mysql  --secure-file-priv=/home/barisozgen/development/personal/via/via-505/via-505-final/data --local-infile=1
 version: "3.7"
 services:
   mysql:
@@ -10,7 +9,7 @@ services:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=gotur
     command:
-      - "--secure-file-priv=/home/barisozgen/development/personal/via/via-505/via-505-final/data"
+      - "--secure-file-priv=./data"
       - "--local-infile=1"
 
 
