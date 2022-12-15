@@ -69,7 +69,6 @@ CREATE TABLE IF NOT EXISTS store (
 	CONSTRAINT fk_store_address FOREIGN KEY ( address_id ) REFERENCES address( address_id )
  );
 
-
 CREATE TABLE IF NOT EXISTS inventory (
 	store_id             int  NOT NULL    ,
 	quantity             int  NOT NULL    ,
@@ -116,8 +115,6 @@ CREATE TABLE IF NOT EXISTS customer_order (
 	CONSTRAINT fk_customer_order_store FOREIGN KEY ( store_id ) REFERENCES store( store_id )
  );
 
-
-
 CREATE TABLE IF NOT EXISTS customer_order_detail (
 	customer_order_id    int  NOT NULL    ,
 	quantity             int  NOT NULL    ,
@@ -138,157 +135,3 @@ CREATE TABLE IF NOT EXISTS rating (
 	CONSTRAINT fk_rating_customer_order FOREIGN KEY ( customer_order_id ) REFERENCES customer_order( customer_order_id ),
 	CONSTRAINT fk_rating_courier FOREIGN KEY ( courier_id ) REFERENCES courier( courier_id )
  );
-
-create function fn_get_closest_courier(customer_id int) returns int deterministic
-    begin
-        declare courier int;
-        
-        with customer_location as (
-            select
-                a.latitude,
-                a.longitude
-            from customer c
-            inner join address a using(address_id)
-            where c.customer_id = customer_id
-        ),
-            
-        closest_courier as (
-            select
-                c.courier_id,
-                sqrt(power(cl.latitude - c.latitude, 2) + power(cl.longitude - c.longitude, 2)) as distance
-            from customer_location cl
-            join courier c
-            order by distance asc
-            limit 1
-        )
-
-        select courier_id into courier
-        from closest_courier cc;
-
-        return courier;
-        end
-;
-
-create function fn_get_closest_store(customer_id int) returns int deterministic
-    begin
-        declare store int;
-        
-        with customer_location as (
-            select
-                a.latitude,
-                a.longitude
-            from customer c
-            inner join address a using(address_id)
-            where c.customer_id = customer_id
-        ),
-            
-        store_locations as (
-            select
-                s.store_id,
-                a.latitude,
-                a.longitude
-            from store s
-            inner join address a using(address_id)
-        ),
-                        
-        closest_store as (
-            select
-                sl.store_id,
-                sqrt(power(cl.latitude - sl.latitude, 2) + power(cl.longitude - sl.longitude, 2)) as distance
-            from customer_location cl
-            join store_locations sl
-            order  by distance asc
-            limit 1
-        )
-        
-        select store_id into store
-        from closest_store cs;
-
-        return store;
-        end
-;
-
-create procedure sp_get_inventory_of_store(store_id int)
-	select s.name, i.quantity, p.name
-	from store s
-	left join inventory i using(store_id)
-	inner join product p using(product_id)
-	where s.store_id = store_id
-;
-
-create procedure sp_make_order(j json, customer_id int)
-
-    begin
-		/* get courier_id of closest courier to the customer*/
-        select fn_get_closest_courier(customer_id) into @courier_id;
-
-		/* get store_id of closest store to the customer*/
-        select fn_get_closest_store(customer_id) into @store_id;
-
-		/* write order to customer_order table */
-        insert into
-            customer_order (customer_id, status_id, courier_id, store_id)
-        value
-            (customer_id, 1, @courier_id, @store_id);
-
-		/* get auto-generated customer_order_id from customer_order table */
-        select last_insert_id() into @customer_order_id;
-
-		/* parse and write json input to a temporary table */
-        create temporary table order_detail
-            with parsed as (
-                select jt.product_id, jt.quantity
-                from json_table(
-                    j, '$[*]'
-                    columns (
-                        product_id int path '$.product_id',
-                        quantity int path '$.quantity'
-                    )
-                ) jt
-            )
-            select quantity, product_id
-            from parsed
-        ;
-
-		/* write product and quantity details of the order to the customer_order_detail table */
-        insert into
-            customer_order_detail(customer_order_id, quantity, product_id)
-            select @customer_order_id, quantity, product_id
-            from order_detail
-        ;
-
-		/* update stocks */
-        update inventory i
-        inner join order_detail od using(product_id)
-        set i.quantity = i.quantity - od.quantity
-        where i.store_id = @store_id
-        ;
-
-    end
-;
-
-/*
-	can be called as follows:
-*/
-/*
-	call sp_make_order('[{"product_id": 1, "quantity": 3}, {"product_id":2, "quantity":1}]', 1)
-*/
-
-create procedure sp_confirm_delivery(customer_order_id int)
-	update customer_order co
-	set co.status_id = 4
-	where co.customer_order_id = customer_order_id
-;
-
-
-create procedure sp_give_rating(point int, customer_order_id int)
-    insert into 
-		rating(point, customer_id, customer_order_id, courier_id)
-        select
-            point,
-            co.customer_order_id,
-            co.customer_id,
-            co.courier_id
-        from customer_order co
-        where co.customer_order_id = customer_order_id
-;
