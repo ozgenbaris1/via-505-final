@@ -15,6 +15,7 @@ VERİTABANI YÖNETİM SİSTEMLERİ VE BÜYÜK VERİ </h1>
 
 </br>
 </br>
+
 ### Önkoşullar
 
 - İşletim sisteminde python, Docker ve docker-compose yüklü olmalıdır.
