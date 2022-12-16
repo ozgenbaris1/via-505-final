@@ -1,6 +1,6 @@
 import mysql.connector
 
-with open("ddl.sql", "r") as f:
+with open("create_functions.sql", "r") as f:
     with mysql.connector.connect(
         host="localhost",
         user="root",
