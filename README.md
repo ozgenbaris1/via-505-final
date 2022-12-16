@@ -8,7 +8,6 @@ VERİTABANI YÖNETİM SİSTEMLERİ VE BÜYÜK VERİ </h1>
 
 <h2 align="center">Konu 6: Götür Projesi</h2>
 </br>
-</br>
 <h3 align="center">528221021 - Mehmet Can Kamışlı</h3>
 <h3 align="center">528221005 - Barış Özgen</h3>
 <h3 align="center">528221029 - Taha Yasin Orhan</h3>
@@ -16,8 +15,6 @@ VERİTABANI YÖNETİM SİSTEMLERİ VE BÜYÜK VERİ </h1>
 
 </br>
 </br>
-</br>
-
 ### Önkoşullar
 
 - İşletim sisteminde python, Docker ve docker-compose yüklü olmalıdır.
