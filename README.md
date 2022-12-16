@@ -18,12 +18,12 @@ VERİTABANI YÖNETİM SİSTEMLERİ VE BÜYÜK VERİ </h1>
 </br>
 </br>
 
-###Önkoşullar
+### Önkoşullar
 
 - İşletim sisteminde python, Docker ve docker-compose yüklü olmalıdır.
 - İşletim sisteminde MySQL ile uyumlu herhangi bir SQL client uygulaması yüklü olmalıdır.
 
-###Proje Nasıl Çalıştırılır?
+### Proje Nasıl Çalıştırılır?
 
 1. gotur_db isminde bir MySQL container'ı ayağa kaldırılır
 
